@@ -3,3 +3,7 @@
 *.pyc
 *.db
 *.sqlite3
+*.isort.cfg
+*.trunk
+*.flake8
+*.cache
