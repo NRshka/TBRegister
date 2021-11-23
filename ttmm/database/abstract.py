@@ -1,4 +1,4 @@
-from typing import Dict, List, Optional, Union, overload
+from typing import Dict, List, Optional, Union
 
 
 class AbstractDatabase:
@@ -11,7 +11,13 @@ class AbstractDatabase:
     def delete_project(self, project_name: str):
         self.__raise_abstract_error__()
 
-    def update_project(self, project_name: str, new_scheme: List[str]):
+    def update_project(
+        self,
+        project_name: str,
+        names_to_add: List[str],
+        names_to_drop: List[str],
+        names_to_rename: Dict[str, str]
+    ):
         self.__raise_abstract_error__()
 
     def add_model(
@@ -26,5 +32,12 @@ class AbstractDatabase:
     def delete_model(self, project_name: str, model_name: str):
         self.__raise_abstract_error__()
 
-    def update_model(self, project_name: str, model_name: str, tag_values: Dict[str, Union[str, int, float]]):
+    def update_model(
+        self,
+        project_name: str,
+        model_name: str,
+        names_to_add: List[str],
+        names_to_drop: List[str],
+        names_to_rename: Dict[str, str]
+    ):
         self.__raise_abstract_error__()
