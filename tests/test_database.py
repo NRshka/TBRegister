@@ -1,18 +1,30 @@
+import os
 import pytest
+import asyncio
 
-from ttmm.database import SQLiteManager
+from ttmm.database import init_sqlite_database_manager_in_context
+
+
+@pytest.fixture(scope="session")
+def event_loop():
+    return asyncio.get_event_loop()
 
 
 @pytest.fixture(scope="session", autouse=True)
-def database_manager():
-    manager = SQLiteManager('test.db')
-    yield manager
+async def database_manager():
+    os.environ["DATABASE_PATH"] = "test.db"
+    cfg = {}
+
+    async for _ in init_sqlite_database_manager_in_context(cfg):
+        yield cfg["DB"]
+
+    os.remove("test.db")
 
 
 @pytest.mark.asyncio
 async def test_creating_project(database_manager):
-    project_name = 'project_name'
-    tags = ['tag1', 'tag2', 'tag3']
+    project_name = "project_name"
+    tags = ["tag1", "tag2", "tag3"]
 
     await database_manager.add_project(project_name, tags)
     signature = await database_manager.get_project_signature(project_name)
