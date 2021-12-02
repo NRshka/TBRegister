@@ -26,7 +26,7 @@ class SQLiteManager(AbstractDatabase):
 
     async def get_project_models_list(self, project_name: str):
         result: List[Dict[str, Union[str, int, float]]] = []
-        column_names = self.get_project_signature(project_name)
+        column_names = await self.get_project_signature(project_name)
 
         cursor = await self.conn.execute(f"""SELECT * FROM {project_name};""")
         data = await cursor.fetchall()
@@ -41,7 +41,7 @@ class SQLiteManager(AbstractDatabase):
 
         await cursor.close()
 
-        return result
+        return result, column_names
 
     async def add_project(self, project_name: str, tags: List[str]):
         # check if this projectname already exists
