@@ -48,3 +48,7 @@ class AbstractDatabase:
         names_to_rename: Dict[str, str]
     ):
         __raise_abstract_error__()
+
+    async def get_projects_list(self) -> List[str]:
+        '''Return list of project names.'''
+        __raise_abstract_error__()

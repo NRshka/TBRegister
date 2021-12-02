@@ -94,6 +94,12 @@ class SQLiteManager(AbstractDatabase):
     def close_connection(self):
         asyncio.create_task(self.conn.close())
 
+    async def get_projects_list(self) -> List[str]:
+        cursor = await self.conn.execute("""SELECT project_name FROM projects;""")
+        projects = await cursor.fetchall()
+
+        return [project[0] for project in projects]
+
 
 async def init_sqlite_database_manager_in_context(app):
     database_path = os.getenv("DATABASE_PATH")
