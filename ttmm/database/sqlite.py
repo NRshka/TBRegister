@@ -40,7 +40,7 @@ class SQLiteManager(AbstractDatabase):
             result.append(data_dict)
 
         await cursor.close()
-        
+
         return result
 
     async def add_project(self, project_name: str, tags: List[str]):
