@@ -19,11 +19,11 @@ async def upload_file(request: web.Request) -> web.Response:
         if not field:
             break
         elif field.name == 'filename':
-            filename = await field.read(decode=True)
+            filename = (await field.read()).decode('utf-8')
         elif field.name == 'file':
             file_container_field = field
         else:
-            tags[field.name] = await field.read(decode=True)
+            tags[field.name] = (await field.read()).decode('utf-8')
 
     if not (filename and file_container_field and theme):
         return web.HTTPBadRequest()
