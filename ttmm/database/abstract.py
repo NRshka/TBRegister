@@ -52,3 +52,7 @@ class AbstractDatabase:
     async def get_projects_list(self) -> List[str]:
         '''Return list of project names.'''
         __raise_abstract_error__()
+
+
+def escape_quotes_in_iterable(sequence):
+    return [f"'{x}'" for x in sequence]
