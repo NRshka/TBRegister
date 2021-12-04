@@ -111,7 +111,6 @@ class SQLiteManager(AbstractDatabase):
         tag_values = ", ".join(escape_quotes_in_iterable(tags.values()))
 
         expression = f"""INSERT INTO {project_name} (filename, filepath, {tag_names}) VALUES ('{model_name}', '{model_path}', {tag_values});"""
-        print(expression)
 
         await self.conn.execute(expression)
 
