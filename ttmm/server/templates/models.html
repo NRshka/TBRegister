@@ -1,0 +1,20 @@
+<html>
+    <body>
+        <h1>{{project_name}}</h1>
+
+        <table>
+            <tr>
+                {% for col_name in column_names %}
+                    <td>{{col_name}}</td>
+                {% endfor %}
+            </tr>
+            {% for model in models %}
+                <tr>
+                    {% for value in model.values() %}
+                        {{ value }}
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    </body>
+</html>

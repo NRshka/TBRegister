@@ -1,7 +1,7 @@
 <html>
     <body>
         {% for project_name in projects %}
-            <p><a href="/projects/{{project_name}}">{{project_name}}</a></p>
+            <p><a href="/models?project={{project_name}}">{{project_name}}</a></p>
         {% endfor %}
     </body>
 </html>
