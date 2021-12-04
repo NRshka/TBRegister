@@ -6,7 +6,7 @@ import aiosqlite
 import asyncio
 from typing import Dict, List, Union
 
-from .abstract import AbstractDatabase
+from .abstract import AbstractDatabase, escape_quotes_in_iterable
 
 
 class SQLiteManager(AbstractDatabase):
@@ -57,7 +57,7 @@ class SQLiteManager(AbstractDatabase):
             f"""INSERT INTO projects (project_name) VALUES ('{project_name}');"""
         )
         tags_values = ", ".join([f"{tag_name} text" for tag_name in tags])
-        await cursor.execute(f"""CREATE TABLE {project_name} (id int, {tags_values});""")
+        await cursor.execute(f"""CREATE TABLE {project_name} (id int, filename text, filepath text, {tags_values});""")
 
         await self.conn.commit()
         await cursor.close()
@@ -99,6 +99,21 @@ class SQLiteManager(AbstractDatabase):
         projects = await cursor.fetchall()
 
         return [project[0] for project in projects]
+
+    async def add_model(
+        self,
+        project_name: str,
+        model_name: str,
+        model_path: str,
+        tags: Dict[str, Union[str, int, float]]
+    ):
+        tag_names = ", ".join(tags.keys())
+        tag_values = ", ".join(escape_quotes_in_iterable(tags.values()))
+
+        expression = f"""INSERT INTO {project_name} (filename, filepath, {tag_names}) VALUES ('{model_name}', '{model_path}', {tag_values});"""
+        print(expression)
+
+        await self.conn.execute(expression)
 
 
 async def init_sqlite_database_manager_in_context(app):
