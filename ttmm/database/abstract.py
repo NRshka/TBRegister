@@ -53,6 +53,9 @@ class AbstractDatabase:
         '''Return list of project names.'''
         __raise_abstract_error__()
 
+    def get_models_count(self, project_name: str) -> int:
+        __raise_abstract_error__()
+
 
 def escape_quotes_in_iterable(sequence):
     return [f"'{x}'" for x in sequence]

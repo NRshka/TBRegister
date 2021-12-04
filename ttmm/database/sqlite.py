@@ -15,10 +15,22 @@ class SQLiteManager(AbstractDatabase):
         self.conn.row_factory = aiosqlite.Row
         asyncio.create_task(self.init_table())
 
+        self.count_models: Dict[str, int] = {}
+        asyncio.create_task(self.calc_count_models_per_project())
+
     async def init_table(self):
         await self.conn.execute(
             """CREATE TABLE IF NOT EXISTS projects(id integer primary key autoincrement, project_name text);"""
         )
+
+    async def calc_count_models_per_project(self):
+        cursor = await self.conn.execute("""SELECT project_name FROM projects;""")
+        result = await cursor.fetchall()
+
+        for project_name in result:
+            await cursor.execute(f"""SELECT id FROM {project_name};""")
+            ids = await cursor.fetchall()
+            self.count_models[project_name] = len(ids)
 
     async def get_project_signature(self, project_name: str):
         table_cur = await self.conn.execute(f"""SELECT * FROM {project_name};""")
@@ -113,6 +125,9 @@ class SQLiteManager(AbstractDatabase):
         expression = f"""INSERT INTO {project_name} (filename, filepath, {tag_names}) VALUES ('{model_name}', '{model_path}', {tag_values});"""
 
         await self.conn.execute(expression)
+
+    def get_models_count(self, project_name: str) -> int:
+        return self.count_models.get(project_name, 0)
 
 
 async def init_sqlite_database_manager_in_context(app):
