@@ -13,7 +13,7 @@ def event_loop():
 
 @pytest.fixture(scope="session", autouse=True)
 async def database_manager():
-    os.environ["DATABASE_PATH"] = "test.db"
+    os.environ["DATABASE_PATH"] = ":memory:"
     cfg = {}
 
     async for _ in init_sqlite_database_manager_in_context(cfg):
